@@ -3,11 +3,11 @@
 ### Install the command globally
 
 ```
-npm i -g @GIT-ORGANISATION/PROJECT-NAME
+npm i -g @heusalagroup/hgcalsync
 ```
 
 ### Use it
 
 ```
-PROJECT-NAME --help 
+hgcalsync --help 
 ```

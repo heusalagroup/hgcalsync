@@ -21,6 +21,7 @@ import { CommandArgumentUtils } from "./fi/hg/core/cmd/utils/CommandArgumentUtil
 import { ParsedCommandArgumentStatus } from "./fi/hg/core/cmd/types/ParsedCommandArgumentStatus";
 import { Headers } from "./fi/hg/core/request/Headers";
 import { BUILD_USAGE_URL, BUILD_WITH_FULL_USAGE } from "./constants/build";
+import { CalendarService } from "./fi/hg/core/CalendarService";
 
 const LOG = LogService.createLogger('main');
 
@@ -35,7 +36,7 @@ export async function main (
 
         LOG.debug(`Loglevel as ${LogService.getLogLevelString()}`);
 
-        const {scriptName, parseStatus, exitStatus, errorString} = CommandArgumentUtils.parseArguments(COMMAND_NAME, args);
+        const {scriptName, parseStatus, exitStatus, errorString, freeArgs} = CommandArgumentUtils.parseArguments(COMMAND_NAME, args);
 
         if ( parseStatus === ParsedCommandArgumentStatus.HELP || parseStatus === ParsedCommandArgumentStatus.VERSION ) {
             console.log(getMainUsage(scriptName));
@@ -55,7 +56,11 @@ export async function main (
             LOG.error('Error while shutting down the service: ', err);
         });
 
-        console.log(`Hello world`);
+        const url = freeArgs.shift();
+
+        const result = await CalendarService.fetchFromUrl(url);
+
+        LOG.debug(`result = `, result);
 
         return CommandExitStatus.OK;
 
