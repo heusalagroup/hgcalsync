@@ -22,6 +22,9 @@ import { ParsedCommandArgumentStatus } from "./fi/hg/core/cmd/types/ParsedComman
 import { Headers } from "./fi/hg/core/request/Headers";
 import { BUILD_USAGE_URL, BUILD_WITH_FULL_USAGE } from "./constants/build";
 import { CalendarService } from "./fi/hg/core/CalendarService";
+import { forEach } from "./fi/hg/core/modules/lodash";
+import { CalendarEvent } from "./fi/hg/core/types/CalendarEvent";
+import { CalendarDTO } from "./fi/hg/core/types/CalendarDTO";
 
 const LOG = LogService.createLogger('main');
 
@@ -58,9 +61,14 @@ export async function main (
 
         const url = freeArgs.shift();
 
-        const result = await CalendarService.fetchFromUrl(url);
+        const result : CalendarDTO = await CalendarService.fetchFromUrl(url);
 
-        LOG.debug(`result = `, result);
+        forEach(
+            result.events,
+            (event: CalendarEvent) => {
+                console.log(`${event.uid}\t${event.start}\t${event.end}\t${event.summary}`);
+            }
+        );
 
         return CommandExitStatus.OK;
 
